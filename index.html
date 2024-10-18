@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Enlace Dinámico de Noticias</title>
+    <script>
+        function getDynamicLink() {
+            const date = new Date();
+            const day = date.getDate();
+            const urls = [
+                "https://www.eluniversal.com.mx/",
+                "https://www.unotv.com/",
+                "https://www.yahoo.com/news/tagged/mexico",
+                "https://www.infobae.com/america/mexico/",
+                "https://www.elfinanciero.com.mx/"
+            ];
+            return urls[day % urls.length];
+        }
+
+        document.addEventListener("DOMContentLoaded", function() {
+            window.location.href = getDynamicLink();
+        });
+    </script>
+</head>
+<body>
+    <p>Redirigiendo a la noticia del día...</p>
+</body>
+</html>
