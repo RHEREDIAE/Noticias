@@ -1,27 +1,84 @@
 <!DOCTYPE html>
-<html>
+<html lang="es">
 <head>
-    <title>Enlace Dinámico de Noticias</title>
-    <script>
-        function getDynamicLink() {
-            const date = new Date();
-            const day = date.getDate();
-            const urls = [
-                "https://www.eluniversal.com.mx/",
-                "https://www.unotv.com/",
-                "https://www.yahoo.com/news/tagged/mexico",
-                "https://www.infobae.com/america/mexico/",
-                "https://www.elfinanciero.com.mx/"
-            ];
-            return urls[day % urls.length];
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Juego de Pepsi</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #f0f0f0;
         }
-
-        document.addEventListener("DOMContentLoaded", function() {
-            window.location.href = getDynamicLink();
-        });
-    </script>
+        #gameArea {
+            position: relative;
+            width: 100%;
+            height: 500px;
+            background-color: #fff;
+            border: 1px solid #ccc;
+            margin: 20px auto;
+            overflow: hidden;
+        }
+        .pepsiCan {
+            position: absolute;
+            width: 50px;
+            height: 100px;
+            background-image: url('https://example.com/pepsi-can.png'); /* Reemplaza con la URL de una imagen de una lata de Pepsi */
+            background-size: cover;
+            cursor: pointer;
+        }
+    </style>
 </head>
 <body>
-    <p>Redirigiendo a la noticia del día...</p>
+    <h1>Juego de Pepsi</h1>
+    <p>Haz clic en las latas de Pepsi para ganar puntos.</p>
+    <div id="gameArea"></div>
+    <p>Puntos: <span id="score">0</span></p>
+    <p>Mejor Puntaje: <span id="highScore">0</span> por <span id="highScoreName">N/A</span></p>
+    <input type="text" id="playerName" placeholder="Tu nombre">
+    <button onclick="startGame()">Iniciar Juego</button>
+
+    <script>
+        let score = 0;
+        let highScore = localStorage.getItem('highScore') || 0;
+        let highScoreName = localStorage.getItem('highScoreName') || 'N/A';
+
+        document.getElementById('highScore').innerText = highScore;
+        document.getElementById('highScoreName').innerText = highScoreName;
+
+        function createPepsiCan() {
+            const gameArea = document.getElementById('gameArea');
+            const pepsiCan = document.createElement('div');
+            pepsiCan.className = 'pepsiCan';
+            pepsiCan.style.top = Math.random() * (gameArea.clientHeight - 100) + 'px';
+            pepsiCan.style.left = Math.random() * (gameArea.clientWidth - 50) + 'px';
+            pepsiCan.addEventListener('click', () => {
+                score++;
+                document.getElementById('score').innerText = score;
+                gameArea.removeChild(pepsiCan);
+                createPepsiCan();
+            });
+            gameArea.appendChild(pepsiCan);
+        }
+
+        function startGame() {
+            score = 0;
+            document.getElementById('score').innerText = score;
+            document.getElementById('gameArea').innerHTML = '';
+            createPepsiCan();
+        }
+
+        window.addEventListener('beforeunload', () => {
+            const playerName = document.getElementById('playerName').value;
+            if (score > highScore) {
+                highScore = score;
+                highScoreName = playerName;
+                localStorage.setItem('highScore', highScore);
+                localStorage.setItem('highScoreName', highScoreName);
+                document.getElementById('highScore').innerText = highScore;
+                document.getElementById('highScoreName').innerText = highScoreName;
+            }
+        });
+    </script>
 </body>
 </html>
